@@ -1,6 +1,7 @@
 const express = require("express");
 // Import and require mysql2
 const mysql = require("mysql2");
+const inquirer = require("inquirer");
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -68,7 +69,7 @@ function menu() {
 }
 
 function allDepartments() {
-  const query = `SELECT * FROM department`;
+  const query = `SELECT * FROM departments`;
   db.query(query, function (err, res) {
     if (err) throw err;
     console.table(res);
@@ -86,7 +87,7 @@ function allRoles() {
 }
 
 function allEmployees() {
-  const query = `SELECT * FROM employee`;
+  const query = `SELECT * FROM employees`;
   db.query(query, function (err, res) {
     if (err) throw err;
     console.table(res);
@@ -104,9 +105,9 @@ function addDepartment() {
       },
     ])
     .then((response) => {
-      const query = `INSERT INTO department SET ?`;
+      const query = `INSERT INTO departments SET ?`;
       db.query(query, {
-        department_name: response.departmentName,
+        name: response.departmentName,
       });
       console.log(`Added ${response.departmentName} to the database`);
       menu();
@@ -169,7 +170,7 @@ function addEmployee() {
       },
     ])
     .then((response) => {
-      const query = `INSERT INTO employee SET ?`;
+      const query = `INSERT INTO employees SET ?`;
       db.query(query, {
         first_name: response.firstName,
         last_name: response.lastName,
@@ -184,7 +185,7 @@ function addEmployee() {
 }
 
 function updateEmployee() {
-  const employeeSql = `SELECT * FROM employee`;
+  const employeeSql = `SELECT * FROM employees`;
   db.query(employeeSql, (err, data) => {
     if (err) throw err;
 
@@ -234,7 +235,7 @@ function updateEmployee() {
               params[0] = role;
               params[1] = employee;
 
-              const sql = `UPDATE employee SET role_id = ? WHERE id = ?`;
+              const sql = `UPDATE employees SET role_id = ? WHERE id = ?`;
 
               db.query(sql, params, (err, result) => {
                 if (err) throw err;
